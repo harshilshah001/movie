@@ -12,415 +12,296 @@ Code, Compile, Run and Debug online from anywhere in world.
 
 #include<string.h>
 
-//#include<conio.h>
+struct moviedetails{
+	char name[25];
+	char phone[15];
+	int seat;
+	int id;
+};
+
+struct moviedetails person[10800]; //array of above structure moviedetails
+int count=0;
+int id2=1000;
+
+int changeprize(int);
+void reservation(int *,int,int );
+int choice1(void); //this function only takes user input regarding choice 
+void cancel(int *);        
+void ticket1(int choice,char name[10],int id2,int price);
+void ticket2(int choice,char name[10],int id2,int price);
+void ticket3(int choice,char name[10],int id2,int price);
+int cancelmovie(void);
+int movie(void);
+int timings(void);
+int city(void);
+void details(void);
 
 
-struct book
 
+int main()
 {
+	int **seat,choice,price=500,selection,selection1,selection2,i; //price is 500
+	
+	//seat array is used to store details whether seat is booked or not
+	seat=(int **)calloc(101,sizeof(int *)); //array for 100 seats
+	for (i=0;i<3;i++) //for 2D array; 1D array inside 1D array
+		*(seat+i)=(int *)calloc(101,sizeof(int )); //allocating 2D array
+	int x;
+	while(x!=5)
+	{
+		choice=choice1();
+		switch(choice)
+		{
+			case 1:
+				price=changeprize(price);
+				break;
+			case 2:
+				details();
+				break;
+			case 3:
+				selection=movie();
+				selection1=timings();
+				selection2=city();
+				reservation(seat[selection-1],price,selection);
+				count++;
+				break;
+			case 4:
+				selection=cancelmovie();
+				cancel(seat[selection-1]);
+				break;
+			case 5:
+				x=5;
+				break;
+			default:
+				printf("Choice not available\n");
+				break;
+		}
+	}
+}
+int changeprize(int prize) //function to change price
+{
+	char input_password[10],server_password[10]="admin";
+	printf("Enter the password to change price of ticket: ");
+	scanf("%s",&input_password);
+	if (strcmp(input_password,server_password)==0)
+	{
+		printf("Please enter new price: ");
+		scanf("%d",&prize);
+	}
+	else
+		printf("The entered password is wrong! ");
+	return prize;
+}
+void reservation(int *array,int price,int selection) //function to reserve tickets
+{
+		int i,j;
+		printf("\n                                SCREEN\n\n\n");
+		for (i=1;i<=100;i++)
+		{
+			if (array[i]==0) //if seat is not reserved then print seat number
+			                 //for user booking
+				printf("%d\t",i); 
+			else //the seat is booked hence print *
+				printf("B\t",i);
+			if(i%10==0)
+				printf("\n\n");
+		}
+		printf("Please enter your name: ");
+		scanf(" %19[^\n]%*[^\n]",&person[count].name); //scanning persons name
+		//%19[^\n]%*[^\n] is regular expression; 
+		//name with more than 19 letters will not be accepted
+		printf("Please enter your phone number: ");
+		scanf("%u",&person[count].phone);
+		int inputCorrect = 0;
+		while(!inputCorrect)
+		{
+    	    printf("Please Enter seat number you want: ");
+    		scanf("%d",&j);
+    		if (j>100||j<1)
+    			{
+    				printf("This seat number is unavailable in this theater\nPlease re-enter\n");
+    				
+    			}
+    		else if (array[j]==1) //Checking if ticket is booked or not
+    			{
+    				printf("Sorry, this ticket is already booked! Please choose another seat.\n");
+    			}
+    		else
+    		    {
+    		        array[j]=1;
+    		        inputCorrect = 1;
+    		    }
+		}
 
-    char name[25];
-
-    char date[20];
-
+// 		
+		person[count].seat=j;
+		if (selection==1)
+			ticket1(j,person[count].name,id2,price);
+		else if (selection==2)
+			ticket2(j,person[count].name,id2,price);
+		else
+			ticket3(j,person[count].name,id2,price);
+		id2++;
 }
 
-
-void main()
-
+int choice1(void)
 {
-
-    system("color 30");
-
-    int ch;
-
-    do
-
-    {
-
-
-        printf("\nWelcome to Moive Ticket Booking System");
-
-
-        printf("\nPress [1] To Book Tickets");
-
-        printf("\nPress [2] To View Now Playing Movie");
-
-        printf("\nPress [3] To Add New Movie (Admin Only)");
-
-        printf("\nPress [4] To Delete Now Playing Movie (Admin Only)");
-
-
-        printf("\nPress [5] To View All Transactions (Admin Only)");
-
-        printf("\nPress [6] To Delete All Transactions (Admin Only)");
-         
-        printf("\nPress [7] To Exit");
-
-        printf("\nPlease Enter Your Choice:");
-
-
-        scanf("%d",&ch);
-
-        switch (ch)
-
-        {
-
-            case 1 :
-
-                Book_Ticket();
-
-                break;
-
-
-
-            case 2:
-
-                View_Movie();
-
-                break;
-
-
-
-            case 3:
-
-                Add_Movie();
-
-                break;
-
-
-
-            case 4:
-
-                Delete_Movie();
-
-                break;
-
-
-
-            case 5:
-
-                Old_Transactions();
-
-                break;
-
-
-
-            case 6:
-
-                Delete_Transactions();
-
-                break;
-
-
-
-            case 7:
-
-                printf("\nThank You!\n");
-
-                exit(0);
-
-
-
-            default:
-
-                printf("\nWrong choice");
-
-                break;
-
-        }
-
-    }
-
-    while(ch!=7);
-
+	int choice;
+	printf("                 Simple Movie Ticket Booking System\n");
+	printf(" ==================================================================\n");
+	printf("||             1- To edit price of ticket (only admin):           ||\n");
+	printf("||             2- To view reserved tickets (only admin):          ||\n");
+	printf("||             3- To puchase ticket:                              ||\n");
+	printf("||             4- To cancel the seat:                             ||\n");
+	printf("||             5- Exit system:                                    ||\n");
+	printf("||================================================================||\n");
+	printf("  Enter your choice: ");
+	scanf("%d",&choice);
+	return choice;
+}
+void cancel(int *array)
+{
+      int Ticket_ID,i,is_ticket_cancelled;
+	  printf("Please enter ID number of ticket: ");
+	  scanf("%d",&Ticket_ID);
+	  for (i=0;i<300;i++)
+	  {
+	  		if(Ticket_ID==person[i].id)
+	  		{
+					 is_ticket_cancelled=1;
+					 system("cls");
+					 printf("%s your seat is %d cancelled",person[i].name,person[i].seat);
+					 array[person[i].seat]=0;
+					 break;
+	  		}
+	  }
+	  if (is_ticket_cancelled!=1)
+	  		printf("Ticket ID number is incorrect please enter right one to cancel ticket: \n");
 }
 
-
-void Book_Ticket(); //for booking tickets
-
-void View_Movie(); // for view now playing movie
-
-void Add_Movie(); //for inserting new movie
-
-void Delete_Movie(); // for deleting now playing movie
-
-void Old_Transactions(); //for viewing old records of booked tickets
-
-void Delete_Transactions(); //for deleting all transactions
-
-
-void Add_Movie()
-
+void details(void)
 {
-
-
-    password[]="password";
-
-
-    struct book ;
-
-    printf("\n\t\t\tCaution!!!\nThis will delete now playing movie (if available) and will add new movie!!!\nIf you want to go back then type '_back_' or '_BACK_'");
-
-    login:
-
-    {
-
-            if(strcmp(p,password)==0)
-
-            {
-
-                printf("\nPassword matched...\n");
-
-                printf("Enter Movie name (Use '_' for spaces):- ");
-
-                scanf("%s",b.name);
-
-                printf("Enter Release Date(DD/MM/YYYY):- ");
-
-                scanf("%s",b.date);
-
-                printf("Enter Ticket Price for row 1 to 4 (Rs.):- ");
-
-                scanf("%d",&b.r1);
-
-                printf("Enter Ticket Price for row 5 to 8 (Rs.):- ");
-
-                scanf("%d",&b.r2);
-
-                printf("Enter Ticket Price for row 9 to 12 (Rs.):- ");
-
-                scanf("%d",&b.r3);
-
-
-
-                printf("\n");
-
-
-            }
-
-        
-            else
-
-            {
-
-                printf("\nInvalid Password!!!");
-
-                goto login;
-
-            }
-
-    }
-
-
+	int i;
+	char input_password[10],server_password[10]="admin";
+	printf("Enter the password to see details: ");
+	scanf("%s",&input_password);
+	if (strcmp(input_password,server_password)==0)
+	{
+		for (i=0;i<count;i++)
+		{
+			printf("seat no: %d is booked by %s booking id is %d\n",person[i].seat,person[i].name,person[i].id);
+		}
+	}
+	else
+		printf("Entered password is wrong \n");
 
 }
-
-
-void Delete_Movie()
-
+int movie(void)
 {
-
-
-    int l;
-
-
-    char temp2, password[]="password",p[100];
-
-        login:
-
-        {
-
-            l=0;
-
-            printf("\nEnter Password:");
-
-            
-            if(strcmp(p,password)==0)
-
-            {
-
-                printf("\nPassword matched...\n");
-
-    
-
-                    //Sleep(1000);
-
-                    printf(".");
-
-                    //Sleep(1000);
-
-                    printf(".");
-
-                    //Sleep(1000);
-
-                    printf(".");
-
-                    //Sleep(1000);
-
-                    printf("\nMovie Deleted Successfully!!!\n\n");
-
-                    //Sleep(2000);
-
-                    main();
-
-                }
-
-            }
-
-            else
-
-            goto login;
-
-        }
-
+	int i;
+	system("cls");
+	printf("\t\t\twhich movie you want to see?\n");
+	printf("\t\t\t----------------------------\n\n");
+	printf("\t\t\tPress 1 for Bhool Bhulaiya 2\n\n");
+	printf("\t\t\tPress 2 for Samrat Prithviraj\n\n");
+	printf("\t\t\tPress 3 for Jurassic World: Dominion\n");
+	scanf("%d",&i);
+	return i;
 }
 
-
-void View_Movie()
-
+int timings(void)
 {
-
-  
-
-    char ch;
-
-    int s1,s2,s3,s4;
-
-    
-
-
-        {
-
-       
-            fscanf(fp,"%s  %s  %d  %d  %d  %d\n%d %d %d %d",b.name,b.date,&b.r1,&b.r2,&b.r3,&b.balcony,&s1,&s2,&s3,&s4);
-
-            printf("================ Now Playing =====================");
-
-            printf("\nMovie Name: %s",b.name);
-
-            printf("\nRelease Date: %s",b.date);
-
-            printf("\nTicket pricing:\n1.Row 1 to 4: %d Rs per seat (%d seats available)\n2.Row 5 to 8: %d Rs per seat (%d seats available)\n3.Row 9 to 12: %d Rs per seat (%d seats available)\n4.Balcony: %d Rs per seat (%d seats available)\n",b.r1,s1,b.r2,s2,b.r3,s3,b.balcony,s4);
-
-            //printf("\nTicket pricing:\n\t\tRow 1 to 4: %d Rs.\n\t\tRow 5 to 8: %d Rs.\n\t\tRow 9 to 12: %d Rs.\n\t\tBalcony: %d Rs.\n\n",b.r1,b.r2,b.r3,b.balcony);
-
-            //Sleep(2000);
-
-    
-
-            main();
-
-        }
-
-        else
-
-        {
-
-            printf("No movie available, please check after few days!!!");
-
-            //Sleep(2000);
-
-            main();
-
-        }
-
-    }
-
+	int i;
+	system("cls");
+	printf("\t\t\tSelect timing slots\n");
+	printf("\t\t\t----------------------------\n\n");
+	printf("\t\t\tPress 1 for 09:00 AM\n");
+	printf("\t\t\tPress 2 for 11:30 AM\n");
+	printf("\t\t\tPress 3 for 02:30 PM\n");
+	printf("\t\t\tPress 4 for 05:00 PM\n");
+	printf("\t\t\tPress 5 for 08:00 PM\n");
+	printf("\t\t\tPress 6 for 10:30 PM\n");
+	scanf("%d",&i);
+	return i;
 }
 
-
-
-void Book_Ticket()
-
+int city(void)
 {
+	int i;
+	system("cls");
+	printf("\t\t\tSelect City\n");
+	printf("\t\t\t----------------------------\n\n");
+	printf("\t\t\tPress 1 for Mumbai\n");
+	printf("\t\t\tPress 2 for Delhi-NCR\n");
+	printf("\t\t\tPress 3 for Bengaluru\n");
+	printf("\t\t\tPress 4 for Hyderabad\n");
+	printf("\t\t\tPress 5 for Chandigarh\n");
+	printf("\t\t\tPress 6 for Ahmedabad\n");
+	scanf("%d",&i);
+	return i;
+}
+int cancelmovie(void)
+{
+	int i;
+	printf("\t\t\twhich movie ticket you want to cancel\n");
+	printf("\t\t\t-------------------------------------\n");
+	printf("\t\t\tpress 1 Toy Story 6\n\n");
+	printf("\t\t\tpress 2 for Pokemon\n\n");
+	printf("\t\t\tpress 3 for Naruto: Movie 1\n");
+	scanf("%d",&i);
+	return i;
+}
 
-    struct book b;
+void ticket1(int choice,char name[10],int id2,int price)
+{
+		system("cls");
+		printf("\n\n");
+        printf("\t-----------------THEATER BOOKING TICKET----------------\n");
+        printf("\t============================================================\n");
+        printf("\t Booking ID : %d \t\t\tShow Name : Toy Story 6\n",id2);
+        printf("\t Customer  : %s\n",name);
+        printf("\t\t\t                              Date      : 29-04-2024\n");
+        printf("\t                                              Time      : 08:00pm\n");
+        printf("\t                                              Hall      : 02\n");
+        printf("\t                                              seats No. : %d  \n",choice);
+        printf("\t                                              price . : %d  \n\n",price);
+		person[count].id=id2;
+        printf("\t============================================================\n");
+        return;
+}
 
-  
-    int total_seat,total_amount,row,temp_row,i,j,k,s1,s2,s3,s4;
+void ticket2(int choice,char name[10],int id2,int price)
+{
+		system("cls");
+		printf("\n\n");
+        printf("\t-----------------THEATER BOOKING TICKET----------------\n");
+        printf("\t============================================================\n");
+        printf("\t Booking ID : %d \t\t\tShow Name : Pokemon\n",id2);
+        printf("\t Customer  : %s\n",name);
+        printf("\t\t\t                              Date      : 15-04-2022\n");
+        printf("\t                                              Time      : 09:00pm\n");
+        printf("\t                                              Hall      : 03\n");
+        printf("\t                                              seats No. : %d  \n",choice);
+        printf("\t                                              price . : %d  \n\n",price);
+        person[count].id=id2;
+        printf("\t============================================================\n");
+        return;
+}
 
-    long long int mobile;
-
-    char name1[15],name2[15];
-
-    char ch,choice,ch1;
-
-
-
-        /*printf("================ Now Playing =====================");
-
-        printf("\nMovie_Name  Release_Date  Ticket_Price");
-
-        printf("\n==================================================\n");
-
-
-
-        fp=fopen("data.txt","r");
-
-        fscanf(fp,"%s  %s  %d  %d  %d  %d\n%d %d %d %d",b.name,b.date,&b.r1,&b.r2,&b.r3,&b.balcony,&s1,&s2,&s3,&s4);
-
-        printf("\n================ Now Playing =====================");
-
-        printf("\nMovie Name: %s",b.name);
-
-        printf("\nRelease Date (DD/MM/YYYY): %s",b.date);
-
-        printf("\nTicket pricing (per seat):");
-
-        printf("\n\t\tRow 1 to 4: %d Rs.",b.r1);
-
-        printf("\n\t\tRow 5 to 8: %d Rs.",b.r2);
-
-        printf("\n\t\tRow 9 to 12: %d Rs.",b.r3);
-
-        printf("\n\t\tBalcony: %d Rs.",b.balcony);
-
-        printf("\n==================================================");
-
-    }
-
-    if(s1==0&&s2==0&&s3==0&&s4==0)
-
-    {
-
-        printf("\nThe seats are full! Visit after few days...\n\n");
-
-        main();
-
-    }
-
-    else
-
-    goto choose;
-
-  
-
-    choose:
-
-    {
-
-  
-
-        fscanf(fp,"%s  %s  %d  %d  %d  %d\n%d %d %d %d",b.name,b.date,&b.r1,&b.r2,&b.r3,&b.balcony,&s1,&s2,&s3,&s4);
-
-        fclose(fp);
-
-        printf("\nDo you want to Book tickets for above movie?(y/n)\n");
-
-        scanf("%s",&choice);
-
-        if((choice=='y')||(choice=='Y'))
-
-        {
-
-            printf("\n***Fill Deatails***");
-
-            name:
-
-                printf("\nEnter your name (First Name<space>Last Name):");
-
-                scanf("%s %s",name1,name2);
-
-                
+void ticket3(int choice,char name[10],int id2,int price)
+{
+		system("cls");
+		printf("\n\n");
+        printf("\t-----------------SIMPLE TICKETING SYSTEM----------------\n");
+        printf("\t============================================================\n");
+        printf("\t Booking ID : %d \t\t\tShow Name : Naruto: Movie 1 \n",id2);
+        printf("\t Customer  : %s\n",name);
+        printf("\t\t\t                              Date      : 12-05-2021\n");
+        printf("\t                                              Time      : 10:00pm\n");
+        printf("\t                                              Hall      : 04\n");
+        printf("\t                                              seats No. : %d  \n",choice);
+        printf("\t                                              price . : %d  \n\n",price);
+        person[count].id=id2;
+        printf("\t============================================================\n");
+        return;
 }
