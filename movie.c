@@ -22,7 +22,7 @@ int count=0;
 int id2=1000;
 
 int changeprize(int);
-void reservation(int *,int,int );
+void booking(int *,int,int );
 int choice1(void); //this function only takes user input regarding choice 
 void cancel(int *);        
 void Bhool_Bhulaiya(int choice,char name[10],int id2,int price);
@@ -60,7 +60,7 @@ int main()
 				selection=movie();
 				selection1=timings();
 				selection2=city();
-				reservation(seat[selection-1],price,selection);
+				booking(seat[selection-1],price,selection);
 				count++;
 				break;
 			case 4:
@@ -90,7 +90,7 @@ int changeprize(int prize) //function to change price
 		printf("The entered password is wrong! ");
 	return prize;
 }
-void reservation(int *array,int price,int selection) //function to reserve tickets
+void booking(int *array,int price,int selection) //function to reserve tickets
 {
 		int i,j;
 		printf("\n                                SCREEN\n\n\n");
