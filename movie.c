@@ -1,10 +1,8 @@
 /******************************************************************************
-
 Welcome to GDB Online.
 GDB online is an online compiler and debugger tool for C, C++, Python, PHP, Ruby, 
 C#, VB, Perl, Swift, Prolog, Javascript, Pascal, HTML, CSS, JS
 Code, Compile, Run and Debug online from anywhere in world.
-
 *******************************************************************************/
 #include<stdio.h>
 
@@ -27,9 +25,9 @@ int changeprize(int);
 void reservation(int *,int,int );
 int choice1(void); //this function only takes user input regarding choice 
 void cancel(int *);        
-void ticket1(int choice,char name[10],int id2,int price);
-void ticket2(int choice,char name[10],int id2,int price);
-void ticket3(int choice,char name[10],int id2,int price);
+void Bhool_Bhulaiya(int choice,char name[10],int id2,int price);
+void Samrat_Prithviraj(int choice,char name[10],int id2,int price);
+void Jurassic_World_Dominion(int choice,char name[10],int id2,int price);
 int cancelmovie(void);
 int movie(void);
 int timings(void);
@@ -136,11 +134,11 @@ void reservation(int *array,int price,int selection) //function to reserve ticke
 // 		
 		person[count].seat=j;
 		if (selection==1)
-			ticket1(j,person[count].name,id2,price);
+			Bhool_Bhulaiya(j,person[count].name,id2,price);
 		else if (selection==2)
-			ticket2(j,person[count].name,id2,price);
+			Samrat_Prithviraj(j,person[count].name,id2,price);
 		else
-			ticket3(j,person[count].name,id2,price);
+			Jurassic_World_Dominion(j,person[count].name,id2,price);
 		id2++;
 }
 
@@ -252,7 +250,7 @@ int cancelmovie(void)
 	return i;
 }
 
-void ticket1(int choice,char name[10],int id2,int price)
+void Bhool_Bhulaiya(int choice,char name[10],int id2,int price)
 {
 		system("cls");
 		printf("\n\n");
@@ -268,7 +266,7 @@ void ticket1(int choice,char name[10],int id2,int price)
         return;
 }
 
-void ticket2(int choice,char name[10],int id2,int price)
+void Samrat_Prithviraj(int choice,char name[10],int id2,int price)
 {
 		system("cls");
 		printf("\n\n");
@@ -284,7 +282,7 @@ void ticket2(int choice,char name[10],int id2,int price)
         return;
 }
 
-void ticket3(int choice,char name[10],int id2,int price)
+void Jurassic_World_Dominion(int choice,char name[10],int id2,int price)
 {
 		system("cls");
 		printf("\n\n");
