@@ -266,8 +266,6 @@ void Delete_Movie()
 
                 }
 
-                fclose(fp);
-
             }
 
             else
@@ -291,9 +289,6 @@ void View_Movie()
 
     
 
-        system("cls");
-
-        if((ch=fgetc(fp))!=EOF)
 
         {
 
@@ -331,8 +326,6 @@ void View_Movie()
         }
 
     }
-
-    fclose(fp);
 
 }
 
@@ -431,17 +424,3 @@ void Book_Ticket()
 
                 
 }
-
-
-
-
-
-
-
-int main()
-{
-    printf("Hello World");
-
-    return 0;
-}
-
