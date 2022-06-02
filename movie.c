@@ -89,20 +89,12 @@ void delete_movie(){
 
 int main()
 {
-    //Defined a pointer to pointer to double
-	int **seat
-	
-	int choice,price=500,selection,selection1,selection2,i; //price is 500
+	int **seat,choice,price=500,selection,selection1,selection2,i; //price is 500
 	
 	//seat array is used to store details whether seat is booked or not
-	
-	//Allocate a one-dimensional array of pointers to double
 	seat=(int **)calloc(101,sizeof(int *)); //array for 100 seats
-	
-	//For each of the pointer to double, allocate an array of double, let the pointer pointing to it.
 	for (i=0;i<101;i++) //for 2D array; 1D array inside 1D array
 		*(seat+i)=(int *)calloc(101,sizeof(int )); //allocating 2D array
-	
 	int x;
 	while(x!=7)
 	{
@@ -117,6 +109,8 @@ int main()
 				break;
 			case 3:
 				selection=movie();
+				selection1=timings();
+				selection2=city();
 				booking(seat[selection-1],price,selection);
 				count++;
 				break;
