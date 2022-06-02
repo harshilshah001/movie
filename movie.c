@@ -95,9 +95,14 @@ int main()
 	int choice,price=500,selection,selection1,selection2,i; //price is 500
 	
 	//seat array is used to store details whether seat is booked or not
+	
+	//Allocate a one-dimensional array of pointers to double
 	seat=(int **)calloc(101,sizeof(int *)); //array for 100 seats
+	
+	//For each of the pointer to double, allocate an array of double, let the pointer pointing to it.
 	for (i=0;i<101;i++) //for 2D array; 1D array inside 1D array
 		*(seat+i)=(int *)calloc(101,sizeof(int )); //allocating 2D array
+	
 	int x;
 	while(x!=7)
 	{
@@ -374,4 +379,3 @@ void Jurassic_World_Dominion(int choice,char name[10],int id2,int price)
         printf("\t============================================================\n");
         return;
 }
-
