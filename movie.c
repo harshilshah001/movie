@@ -17,7 +17,14 @@ struct moviedetails{
 	int id;
 };
 
+struct movie{
+    int id;
+    char name[25];
+};
+
 struct moviedetails person[10800]; //array of above structure moviedetails
+struct movie movies[100]; // array of movies stored in the system
+int movie_count = 0;
 int count=0;
 int id2=1000;
 
@@ -34,18 +41,65 @@ int timings(void);
 int city(void);
 void details(void);
 
+void add_movie(){
+    char input_password[10],server_password[10]="admin";
+	printf("Enter the password: ");
+	scanf("%s",&input_password);
+	if (!(strcmp(input_password,server_password)==0))
+	{
+		printf("Wrong password\n\n");
+		return;
+	}
+    char movie_name[25];
+    printf("Enter movie name to be added:");
+    scanf("%s",&movie_name);
+    strcpy(movies[movie_count].name,movie_name);
+    movies[movie_count].id = movie_count+1;
+    movie_count++;
+    printf("Movie %s is added in to the system:\n\n",movie_name);
+}
+
+void delete_movie(){
+    char input_password[10],server_password[10]="admin";
+	printf("Enter the password: ");
+	scanf("%s",&input_password);
+	if (!(strcmp(input_password,server_password)==0))
+	{
+	    printf("Wrong password\n\n");
+		return;
+	}
+    char movie_name[25];
+    printf("Enter movie name to be deleted:");
+    scanf("%s",&movie_name);
+    int movie_deleted = 0;
+    for(int i=0;i<movie_count;i++){
+        if(!strcmp(movie_name,movies[i].name)){
+            movies[i].id = -1;
+            movie_deleted = 1;  // Flag variable to check if movie is deleted
+        }
+    }
+    if(movie_deleted == 1){
+        printf("Movie %s is deleted for the system:\n\n",movie_name);
+    }
+    else{
+        printf("Movie not found!");
+    }
+}
 
 
 int main()
 {
-	int **seat,choice,price=500,selection,selection1,selection2,i; //price is 500
+    //Defined a pointer to pointer to double
+	int **seat
+	
+	int choice,price=500,selection,selection1,selection2,i; //price is 500
 	
 	//seat array is used to store details whether seat is booked or not
 	seat=(int **)calloc(101,sizeof(int *)); //array for 100 seats
-	for (i=0;i<3;i++) //for 2D array; 1D array inside 1D array
+	for (i=0;i<101;i++) //for 2D array; 1D array inside 1D array
 		*(seat+i)=(int *)calloc(101,sizeof(int )); //allocating 2D array
 	int x;
-	while(x!=5)
+	while(x!=7)
 	{
 		choice=choice1();
 		switch(choice)
@@ -58,8 +112,6 @@ int main()
 				break;
 			case 3:
 				selection=movie();
-				selection1=timings();
-				selection2=city();
 				booking(seat[selection-1],price,selection);
 				count++;
 				break;
@@ -68,7 +120,13 @@ int main()
 				cancel(seat[selection-1]);
 				break;
 			case 5:
-				x=5;
+				add_movie();
+				break;
+			case 6:
+				delete_movie();
+				break;
+			case 7:
+				x=7;
 				break;
 			default:
 				printf("Choice not available\n");
@@ -90,6 +148,9 @@ int changeprize(int prize) //function to change price
 		printf("The entered password is wrong! ");
 	return prize;
 }
+
+
+
 void booking(int *array,int price,int selection) //function to reserve tickets
 {
 		int i,j;
@@ -133,12 +194,7 @@ void booking(int *array,int price,int selection) //function to reserve tickets
 
 // 		
 		person[count].seat=j;
-		if (selection==1)
-			Bhool_Bhulaiya(j,person[count].name,id2,price);
-		else if (selection==2)
-			Samrat_Prithviraj(j,person[count].name,id2,price);
-		else
-			Jurassic_World_Dominion(j,person[count].name,id2,price);
+		print_movie_ticket(j,selection,person[count].name,id2,price);
 		id2++;
 }
 
@@ -151,7 +207,9 @@ int choice1(void)
 	printf("||             2- To view reserved tickets (only admin):          ||\n");
 	printf("||             3- To puchase ticket:                              ||\n");
 	printf("||             4- To cancel the seat:                             ||\n");
-	printf("||             5- Exit system:                                    ||\n");
+	printf("||             5- Add Movie  :                                    ||\n");
+	printf("||             6- Delete Movie:                                   ||\n");
+	printf("||             7- Exit:                                           ||\n");
 	printf("||================================================================||\n");
 	printf("  Enter your choice: ");
 	scanf("%d",&choice);
@@ -200,9 +258,11 @@ int movie(void)
 	system("cls");
 	printf("\t\t\twhich movie you want to see?\n");
 	printf("\t\t\t----------------------------\n\n");
-	printf("\t\t\tPress 1 for Bhool Bhulaiya 2\n\n");
-	printf("\t\t\tPress 2 for Samrat Prithviraj\n\n");
-	printf("\t\t\tPress 3 for Jurassic World: Dominion\n");
+	for(int i=0;i<movie_count;i++){
+	    if(movies[i].id != -1){
+	        printf("\t\t\t Press %d for %s\n\n",movies[i].id,movies[i].name);
+	    }
+	}
 	scanf("%d",&i);
 	return i;
 }
@@ -243,11 +303,28 @@ int cancelmovie(void)
 	int i;
 	printf("\t\t\twhich movie ticket you want to cancel\n");
 	printf("\t\t\t-------------------------------------\n");
-	printf("\t\t\tPress 1 for Bhool Bhulaiya 2\n\n");
-	printf("\t\t\tPress 2 for Samrat Prithviraj\n\n");
-	printf("\t\t\tPress 3 for Jurassic World: Dominion\n");
+	for(int i=0;i<movie_count;i++){
+	    if(movies[i].id != -1){
+	        printf("\t\t\t Press %d for %s\n\n",movies[i].id,movies[i].name);
+	    }
+	}
 	scanf("%d",&i);
 	return i;
+}
+
+void print_movie_ticket(int choice,int selection,char name[10],int id2,int price){
+    system("cls");
+	printf("\n\n");
+    printf("\t----------------- TICKET  CONFIRMED  ----------------\n");
+    printf("\t============================================================\n");
+    printf("\t Booking ID : %d \t\t\tShow Name : %s 2\n",id2,movies[selection-1].name);
+    printf("\t Customer  : %s\n",name);
+    printf("\t\t\t                              Date      : 05-05-2022\n");
+    printf("\t                                              Seats No. : %d  \n",choice);
+    printf("\t                                              Price . : %d  \n\n",price);
+	person[count].id=id2;
+    printf("\t============================================================\n");
+    return;
 }
 
 void Bhool_Bhulaiya(int choice,char name[10],int id2,int price)
@@ -297,3 +374,4 @@ void Jurassic_World_Dominion(int choice,char name[10],int id2,int price)
         printf("\t============================================================\n");
         return;
 }
+
